@@ -3,14 +3,4 @@ spring:
     name: service-order
 
 server:
-  servlet:
-    context-path: /order
   port: 8662
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    prefer-ip-address: true
-    hostname: localhost
