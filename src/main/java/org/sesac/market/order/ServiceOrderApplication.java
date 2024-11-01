@@ -1,4 +1,4 @@
-package org.sesac.market;
+package org.sesac.market.order;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
