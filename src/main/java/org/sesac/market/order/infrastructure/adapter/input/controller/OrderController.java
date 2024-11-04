@@ -1,4 +1,4 @@
-package org.sesac.market.order.adapter.in;
+package org.sesac.market.order.infrastructure.adapter.input.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
