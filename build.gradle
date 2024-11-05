@@ -67,6 +67,9 @@ dependencies {
 
     // yaml exception messages
     implementation 'dev.akkinoc.util:yaml-resource-bundle:2.+'
+
+    // hypersistence utils for tsid generator
+    implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3+'
 }
 
 dependencyManagement {
