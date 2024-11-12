@@ -21,3 +21,7 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
       ejb:
         naming_strategy: org.hibernate.cfg.ImprovedNamingStrategy
+
+logging:
+  level:
+    root: debug
