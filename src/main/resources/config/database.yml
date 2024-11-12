@@ -4,3 +4,7 @@ spring:
     username: ${ORDER_DB_USER:root}
     password: ${ORDER_DB_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+  sql:
+    init:
+      mode: ${SQL_INIT_MODE:never}
