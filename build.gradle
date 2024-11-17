@@ -41,7 +41,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.cloud:spring-cloud-starter'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    // implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
     implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-client'
 
@@ -70,6 +70,12 @@ dependencies {
 
     // hypersistence utils for tsid generator
     implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3+'
+
+    // log
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    // implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+    // implementation 'io.micrometer:micrometer-tracing-bridge-brave'
 }
 
 dependencyManagement {
