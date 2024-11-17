@@ -12,4 +12,6 @@ FROM openjdk:21-slim
 COPY --from=builder /app/build/libs/service-order.jar .
 
 ENTRYPOINT ["java", "-jar", "service-order.jar"]
-EXPOSE 8661
+EXPOSE 8662
+EXPOSE 8080
+EXPOSE 80
