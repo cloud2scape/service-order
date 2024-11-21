@@ -1,15 +1,15 @@
 package org.sesac.market.order.application.service;
 
 import lombok.RequiredArgsConstructor;
-import org.sesac.market.order.application.dto.request.CreateOrderRequest;
-import org.sesac.market.order.application.dto.request.DeleteOrderRequest;
-import org.sesac.market.order.application.dto.request.ReadOrderRequest;
-import org.sesac.market.order.application.dto.request.ReadOrdersRequest;
+import org.sesac.market.order.application.dto.request.*;
 import org.sesac.market.order.application.port.input.OrderCommand;
 import org.sesac.market.order.application.port.input.OrderQuery;
 import org.sesac.market.order.application.port.output.OrderPort;
+import org.sesac.market.order.domain.event.Events;
+import org.sesac.market.order.domain.event.OrderPlacedEvent;
 import org.sesac.market.order.domain.exception.BizException;
 import org.sesac.market.order.domain.model.Order;
+import org.sesac.market.order.domain.model.OrderState;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +28,23 @@ public class OrderService implements OrderCommand, OrderQuery {
             throw new BizException.NoneExists();
         }
 
-        return port.save(Order.builder()
+        Order order = port.save(Order.builder()
                 .accountId(request.accountId())
                 .productId(request.productId())
                 .price(request.price())
                 .quantity(request.quantity())
+                .orderState(OrderState.PENDING)
                 .build());
+
+        Events.raise(OrderPlacedEvent.builder()
+                .orderId(order.getId())
+                .accountId(order.getAccountId())
+                .productId(order.getProductId())
+                .price(order.getPrice())
+                .quantity(order.getQuantity())
+                .build());
+
+        return order;
     }
 
     @Override
@@ -49,6 +60,15 @@ public class OrderService implements OrderCommand, OrderQuery {
 
         port.delete(order);
         return true;
+    }
+
+    @Override
+    @Transactional
+    public Order updateOrderState(UpdateOrderStateRequest request) {
+        Order order = port.get(request.id())
+                .orElseThrow(BizException.NoneExists::new);
+
+        return order.changeOrderState(request.state());
     }
 
     @Override
