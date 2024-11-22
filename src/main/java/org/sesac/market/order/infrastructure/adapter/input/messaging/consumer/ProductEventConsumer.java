@@ -8,10 +8,8 @@ import org.sesac.market.order.domain.event.OrderCanceledEvent;
 import org.sesac.market.order.domain.model.Order;
 import org.sesac.market.order.domain.model.OrderState;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-@Async
 @Slf4j
 @Component
 @RequiredArgsConstructor
