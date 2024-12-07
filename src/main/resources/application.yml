@@ -8,6 +8,7 @@ spring:
       - "optional:classpath:/config/monitoring.yml"
       - "optional:classpath:/config/message-source.yml"
       - "optional:classpath:/config/kafka.yml"
+      - "optional:classpath:/config/cache.yml"
 
   profiles:
     active: ${PROFILE:dev}
