@@ -1,5 +1,6 @@
 package org.sesac.market.order.application.service;
 
+import io.lettuce.core.RedisConnectionException;
 import lombok.RequiredArgsConstructor;
 import org.sesac.market.order.application.dto.request.*;
 import org.sesac.market.order.application.port.input.OrderCommand;
@@ -10,7 +11,11 @@ import org.sesac.market.order.domain.event.OrderPlacedEvent;
 import org.sesac.market.order.domain.exception.BizException;
 import org.sesac.market.order.domain.model.Order;
 import org.sesac.market.order.domain.model.OrderState;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,13 +77,37 @@ public class OrderService implements OrderCommand, OrderQuery {
     }
 
     @Override
+    @Cacheable(value = "order", key = "#query.id()", cacheManager = "orderCacheManager")
+    @Retryable(retryFor = {RedisConnectionException.class}, maxAttempts = 1, backoff = @Backoff(delay = 100))
     public Order read(ReadOrderRequest query) {
+        return getOrder(query);
+    }
+
+    private Order getOrder(ReadOrderRequest query) {
         return port.get(query.id())
                 .orElseThrow(BizException.NoneExists::new);
     }
 
+    @Recover
+    @SuppressWarnings("unused")
+    public Order readWithoutCache(ReadOrderRequest query) {
+        return getOrder(query);
+    }
+
     @Override
+    @Cacheable(value = "orders", key = "#query.pageable()", cacheManager = "orderCacheManager")
+    @Retryable(retryFor = {RedisConnectionException.class}, maxAttempts = 1, backoff = @Backoff(delay = 100))
     public Page<Order> read(ReadOrdersRequest query) {
+        return getOrders(query);
+    }
+
+    @Recover
+    @SuppressWarnings("unused")
+    public Page<Order> readWithoutCache(ReadOrdersRequest query) {
+        return getOrders(query);
+    }
+
+    private Page<Order> getOrders(ReadOrdersRequest query) {
         return port.getMultiple(query.pageable());
     }
 }
